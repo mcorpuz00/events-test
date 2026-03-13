@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airtable Buildathon</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'AT Season Sans VF', 'Season VF TRIAL', system-ui, -apple-system, sans-serif;
+      background: #fff;
+      color: #161616;
+      min-width: 320px;
+    }
+
+    /* ─── CONTAINER / GRID ───────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1344px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    .nav {
+      background: #fff;
+      height: 77px;
+      border-bottom: 1px solid rgba(22,22,22,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo img {
+      height: auto;
+    }
+    .nav-logo .logo-icon {
+      width: 24px;
+      height: 20px;
+    }
+    .nav-logo .logo-text {
+      width: 79px;
+      height: 17px;
+    }
+    .btn-primary {
+      background: #161616;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 750;
+      cursor: pointer;
+      letter-spacing: 0;
+      line-height: 1;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: #2a2a2a; }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      background: #f8f6f6;
+      min-height: 700px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero .container {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      min-height: 700px;
+    }
+    .hero-content {
+      padding: 118px 0 60px 0;
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+    }
+    .hero-badge {
+      margin-bottom: 0;
+    }
+    .hero-badge img {
+      width: 221px;
+      height: 49px;
+    }
+    .hero-headline {
+      font-size: 65px;
+      font-weight: 600;
+      line-height: 1.1;
+      color: #262323;
+      letter-spacing: -1px;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+    .hero-subhead {
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #262323;
+      margin-bottom: 32px;
+    }
+    .btn-cta {
+      background: #161616;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-block;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-cta:hover { background: #2a2a2a; transform: translateY(-1px); }
+
+    .hero-countdown {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .countdown-number {
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1;
+      color: #262323;
+    }
+    .countdown-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: #262323;
+      margin-top: 2px;
+    }
+
+    /* hero decorative */
+    .hero-deco {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 512px;
+      height: 700px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .deco-rect-teal-top {
+      position: absolute;
+      right: 0; top: 0;
+      width: 187px; height: 167px;
+      background: linear-gradient(to right, #17725e, rgba(23,114,81,0.2));
+    }
+    .deco-rect-teal-bottom {
+      position: absolute;
+      right: 325px; bottom: 0;
+      width: 325px; height: 103px;
+      background: linear-gradient(to right, #17725e, rgba(23,114,81,0.2));
+    }
+    .deco-pink-sq {
+      position: absolute;
+      right: 22px; top: 275px;
+      width: 22px; height: 22px;
+      background: #f9b5f5;
+    }
+    .deco-gray-sq {
+      position: absolute;
+      right: 480px; top: 61px;
+      width: 22px; height: 22px;
+      background: #d9d9d9;
+    }
+    .deco-pink-sq2 {
+      position: absolute;
+      right: 458px; top: 0;
+      width: 61px; height: 61px;
+      background: #f9b5f5;
+    }
+    .deco-pink-grad {
+      position: absolute;
+      right: 101px; top: 512px;
+      width: 188px; height: 85px;
+      background: linear-gradient(to right, #dd04a8, rgba(221,4,168,0.2));
+    }
+    .deco-pink-grad2 {
+      position: absolute;
+      right: 0; top: 297px;
+      width: 79px; height: 79px;
+      background: linear-gradient(to right, #dd04a8, rgba(221,4,168,0.2));
+    }
+    .hero-photo {
+      position: absolute;
+      right: 0; top: 167px;
+      width: 210px; height: 209px;
+      object-fit: cover;
+      z-index: 2;
+    }
+    .hero-photo-bottom {
+      position: absolute;
+      right: 187px; top: 430px;
+      width: 121px; height: 167px;
+      object-fit: cover;
+      z-index: 2;
+    }
+
+    /* ─── HOW IT WORKS (TABBED) ──────────────────── */
+    .how-it-works {
+      background: #0f0f0f;
+      padding: 84px 0 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    .how-it-works .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .how-headline {
+      font-size: clamp(34px, 4.2vw, 48px);
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      line-height: 1.1;
+      letter-spacing: -1.2px;
+      max-width: 611px;
+      margin-bottom: 20px;
+    }
+    .how-headline .pink { color: #f9b5f5; }
+    .how-subhead {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      line-height: 1.55;
+      max-width: 64ch;
+      margin-bottom: 32px;
+    }
+
+    /* Tab pills */
+    .how-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .how-tabs .tab-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(243,182,255,0.55);
+      background: rgba(0,0,0,0.20);
+      color: #f9b5f5;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      font-family: inherit;
+      user-select: none;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+    }
+    .how-tabs .tab-pill:hover {
+      border-color: rgba(243,182,255,0.80);
+      box-shadow: 0 10px 34px rgba(0,0,0,0.30);
+    }
+    .how-tabs .tab-pill.active {
+      background: #f9b5f5;
+      border-color: #f9b5f5;
+      color: rgba(10,10,10,0.92);
+      box-shadow: 0 14px 46px rgba(0,0,0,0.35);
+    }
+
+    /* Tab panels */
+    .how-panel-wrap {
+      width: 100%;
+      max-width: 980px;
+      margin: 10px auto 0;
+    }
+    .how-panel {
+      display: none;
+      grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+      column-gap: 44px;
+      row-gap: 18px;
+      padding: 22px;
+      background: #f9b5f5;
+      color: #0b0b0b;
+      min-height: 220px;
+    }
+    .how-panel.active {
+      display: grid;
+    }
+    .how-panel-title {
+      font-size: clamp(24px, 2.4vw, 34px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+    }
+    .how-panel-body {
+      font-size: 16px;
+      line-height: 1.55;
+      font-weight: 500;
+      max-width: 56ch;
+    }
+    .how-panel-right {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .how-chips {
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .how-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      background: rgba(0,0,0,0.92);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ─── HACKATHON DETAILS (INTERACTIVE ACCORDION) ─ */
+    .hackathon {
+      background: #0b0b0b;
+      padding: 84px 0;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      --details-accent: #f9b5f5;
+    }
+    .hack-kicker {
+      font-size: clamp(34px, 4.2vw, 44px);
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 0.98;
+      color: #fff;
+      max-width: 62ch;
+      margin-bottom: 26px;
+    }
+    .details-accordion {
+      margin-top: 18px;
+    }
+    .details-item {
+      padding: 6px 0;
+    }
+    .details-trigger {
+      appearance: none;
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      color: rgba(255,255,255,0.96);
+      font-size: clamp(44px, 6vw, 88px);
+      font-family: inherit;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 0.94;
+      transition: color 160ms ease;
+      outline: none;
+    }
+    .details-trigger:focus-visible {
+      box-shadow: 0 0 0 3px #f9b5f5;
+      border-radius: 14px;
+    }
+    .details-panel {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 260ms ease, opacity 200ms ease;
+    }
+    .details-item.is-active .details-panel {
+      max-height: 300px;
+      opacity: 1;
+      margin-top: 4px;
+    }
+    .details-desc {
+      max-width: 70ch;
+      color: #f9b5f5;
+      font-size: 18px;
+      line-height: 1.55;
+      font-weight: 400;
+    }
+    .details-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #000, transparent);
+      margin-top: 10px;
+      opacity: 0.85;
+    }
+
+    /* Hover behavior (desktop) */
+    @media (hover: hover) {
+      .details-item:hover .details-trigger {
+        color: var(--details-accent);
+      }
+      .details-item:hover .details-panel {
+        max-height: 300px;
+        opacity: 1;
+        margin-top: 4px;
+      }
+      .details-item.is-active .details-panel {
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0;
+      }
+      .details-item.is-active:hover .details-panel {
+        max-height: 300px;
+        opacity: 1;
+        margin-top: 4px;
+      }
+    }
+
+    /* ─── WAYS TO WIN ─────────────────────────────── */
+    .ways-to-win {
+      background: #17725e;
+      padding: 91px 0 60px;
+      overflow: hidden;
+      position: relative;
+    }
+    .win-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .win-headline {
+      font-size: 48px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -1.2px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .win-subhead {
+      font-size: 28px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: 0.14px;
+    }
+    .win-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 48px;
+    }
+    .win-item {
+      padding: 20px 0 32px;
+      border-top: 1px solid rgba(249,181,245,0.3);
+    }
+    .win-item-title {
+      font-size: 36px;
+      font-weight: 500;
+      color: #f9b5f5;
+      letter-spacing: -1.36px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .win-item-body {
+      font-size: 22px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.35;
+      letter-spacing: 0.11px;
+    }
+
+    /* ─── EVENT PROGRAM ───────────────────────────── */
+    .program {
+      background: #0f0f0f;
+      padding: 84px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .program-headline {
+      font-size: 48px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -1.2px;
+      line-height: 1;
+      margin-bottom: 48px;
+    }
+    .program-item {
+      display: grid;
+      grid-template-columns: 152px 1fr 1.2fr;
+      align-items: start;
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      gap: 0 24px;
+    }
+    .program-time {
+      font-size: 40px;
+      font-weight: 500;
+      color: #f797ef;
+      letter-spacing: -1.2px;
+      line-height: 1;
+    }
+    .program-name {
+      font-size: 40px;
+      font-weight: 500;
+      color: #f797ef;
+      letter-spacing: -1.2px;
+      line-height: 1;
+    }
+    .program-desc {
+      font-size: 20px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.35;
+      letter-spacing: 0.1px;
+      max-width: 412px;
+    }
+
+    /* ─── FAQS ────────────────────────────────────── */
+    .faqs {
+      background: #fff;
+      padding: 80px 0;
+    }
+    .faqs-header {
+      margin-bottom: 48px;
+    }
+    .faqs-headline {
+      font-size: 48px;
+      font-weight: 500;
+      color: #161616;
+      letter-spacing: -0.96px;
+      line-height: 1;
+    }
+    .faq-row {
+      border-top: 1px solid #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      cursor: pointer;
+    }
+    .faq-row:last-child {
+      border-bottom: 1px solid #bbb;
+    }
+    .faq-question {
+      font-size: 20px;
+      font-weight: 500;
+      color: #161616;
+      line-height: 1.35;
+      letter-spacing: 0.1px;
+      opacity: 0.9;
+      flex: 1;
+    }
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(22,22,22,0.48);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+    .faq-icon svg {
+      transform: rotate(0deg);
+      transition: transform 0.2s;
+    }
+    .faq-row.open .faq-icon svg { transform: rotate(180deg); }
+    .faq-answer {
+      display: none;
+      padding: 0 0 24px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #444;
+      line-height: 1.5;
+      border-top: none;
+    }
+    .faq-answer.open { display: block; }
+
+    /* ─── CTA SECTION ─────────────────────────────── */
+    .cta-section {
+      background: #f8f6f6;
+      min-height: 449px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section .container {
+      padding-top: 100px;
+      padding-bottom: 100px;
+      position: relative;
+      z-index: 2;
+    }
+    .cta-headline {
+      font-size: 48px;
+      font-weight: 500;
+      color: #161616;
+      letter-spacing: -0.96px;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .cta-sub {
+      font-size: 22px;
+      font-weight: 500;
+      color: #161616;
+      line-height: 1.4;
+      margin-bottom: 40px;
+    }
+    .cta-deco-teal {
+      position: absolute;
+      right: 165px; bottom: 0;
+      width: 118px; height: 106px;
+      background: linear-gradient(to right, #17725e, rgba(23,114,81,0.2));
+      pointer-events: none;
+    }
+    .cta-deco-teal2 {
+      position: absolute;
+      right: 295px; bottom: 0;
+      width: 156px; height: 34px;
+      background: linear-gradient(to right, #17725e, rgba(23,114,81,0.2));
+      pointer-events: none;
+    }
+    .cta-deco-teal3 {
+      position: absolute;
+      right: 380px; top: 0;
+      width: 339px; height: 65px;
+      background: linear-gradient(to right, #17725e, rgba(23,114,81,0.2));
+      pointer-events: none;
+    }
+    .cta-deco-pink {
+      position: absolute;
+      right: 462px; top: 65px;
+      width: 39px; height: 39px;
+      background: #f9b5f5;
+      pointer-events: none;
+    }
+    .cta-deco-pink2 {
+      position: absolute;
+      right: 0px; bottom: 105px;
+      width: 47px; height: 46px;
+      background: #f9b5f5;
+      pointer-events: none;
+    }
+    .cta-photo {
+      position: absolute;
+      right: 0; top: 65px;
+      width: 214px; height: 143px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    .site-footer {
+      background: #fff;
+      border-top: 1px solid rgba(22,22,22,0.08);
+      padding: 0;
+      color: #181d26;
+      font-family: inherit;
+    }
+
+    /* Top bar: logo + primary links left, social right */
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(22,22,22,0.08);
+    }
+    .footer-top-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .footer-logo svg {
+      display: block;
+      flex-shrink: 0;
+    }
+    .footer-primary-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .footer-primary-links a {
+      color: #181d26;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .footer-primary-links a:hover {
+      color: #666;
+    }
+    .footer-social {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      align-items: center;
+    }
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      color: #9297a0;
+      transition: color 0.15s;
+    }
+    .footer-social a:hover {
+      color: #181d26;
+    }
+    .footer-social svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Column links */
+    .footer-columns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 32px;
+      padding: 48px 0 56px;
+    }
+    .footer-col-header {
+      font-size: 16px;
+      font-weight: 600;
+      color: #181d26;
+      margin-bottom: 20px;
+    }
+    .footer-col-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .footer-col-links a {
+      color: #6f7580;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      transition: color 0.15s;
+    }
+    .footer-col-links a:hover {
+      color: #181d26;
+    }
+
+    /* Utility / legal bar */
+    .footer-utility {
+      border-top: 1px solid rgba(22,22,22,0.08);
+      padding: 24px 0;
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .footer-utility a {
+      color: #9297a0;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.15s;
+    }
+    .footer-utility a:hover {
+      color: #181d26;
+    }
+
+    /* ─── REGISTRATION MODAL ────────────────────── */
+    .reg-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.75);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: auto;
+    }
+    .reg-modal.is-open { display: flex; }
+    .reg-modal-content {
+      background: #fff;
+      width: min(1500px, calc(100vw - 48px));
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      max-height: calc(100vh - 48px);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+    }
+    .reg-modal-close {
+      color: #666;
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      font-size: 28px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 2;
+      line-height: 1;
+      background: rgba(255,255,255,0.85);
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    .reg-modal-close:hover { color: #000; }
+    .reg-modal-iframe {
+      display: block;
+      width: 100%;
+      min-width: 100%;
+      border: 0;
+      background: transparent;
+      height: min(1000px, calc(100vh - 96px));
+    }
+    @media (max-width: 768px) {
+      .reg-modal { padding: 14px; }
+      .reg-modal-content {
+        width: calc(100vw - 28px);
+        border-radius: 10px;
+        max-height: calc(100vh - 28px);
+      }
+      .reg-modal-iframe {
+        height: calc(100vh - 72px);
+      }
+    }
+
+    /* ─── RESPONSIVE: TABLET (≤1024px) ───────────── */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 0 40px;
+      }
+
+      .hero-content {
+        padding-top: 80px;
+        max-width: 50%;
+      }
+      .hero-headline {
+        font-size: 48px;
+      }
+      .hero-deco {
+        width: 45%;
+      }
+
+      .how-panel {
+        grid-template-columns: 1fr;
+        row-gap: 18px;
+      }
+
+      .program-item {
+        grid-template-columns: 120px 1fr 1.2fr;
+      }
+      .program-time,
+      .program-name {
+        font-size: 32px;
+      }
+    }
+
+    /* ─── RESPONSIVE: TABLET SMALL (≤768px) ──────── */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 28px;
+      }
+
+      /* Hero */
+      .hero .container {
+        min-height: auto;
+      }
+      .hero-content {
+        max-width: 100%;
+        padding: 60px 0;
+      }
+      .hero-headline {
+        font-size: 42px;
+      }
+      .hero-subhead {
+        font-size: 18px;
+      }
+      .hero-deco {
+        display: none;
+      }
+
+      /* How it works */
+      .how-it-works {
+        padding: 60px 0;
+      }
+      .how-tabs {
+        gap: 8px;
+      }
+      .how-tabs .tab-pill {
+        font-size: 13px;
+        padding: 8px 14px;
+      }
+      .how-panel-body {
+        font-size: 15px;
+      }
+
+      /* Hackathon */
+      .hackathon {
+        padding: 64px 0;
+      }
+      .details-desc {
+        font-size: 16px;
+      }
+
+      /* Footer */
+      .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+      .footer-top-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+      .footer-columns {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* Ways to Win */
+      .ways-to-win {
+        padding: 60px 0;
+      }
+      .win-headline {
+        font-size: 36px;
+      }
+      .win-subhead {
+        font-size: 20px;
+      }
+      .win-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .win-item-title {
+        font-size: 28px;
+      }
+      .win-item-body {
+        font-size: 18px;
+      }
+
+      /* Program */
+      .program {
+        padding: 60px 0;
+      }
+      .program-headline {
+        font-size: 36px;
+      }
+      .program-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 24px 0;
+      }
+      .program-time {
+        font-size: 28px;
+      }
+      .program-name {
+        font-size: 28px;
+      }
+      .program-desc {
+        font-size: 16px;
+        max-width: 100%;
+      }
+
+      /* FAQs */
+      .faqs {
+        padding: 60px 0;
+      }
+      .faqs-headline {
+        font-size: 36px;
+      }
+      .faq-question {
+        font-size: 16px;
+      }
+
+      /* CTA */
+      .cta-section .container {
+        padding-top: 60px;
+        padding-bottom: 60px;
+      }
+      .cta-headline {
+        font-size: 36px;
+      }
+      .cta-sub {
+        font-size: 18px;
+      }
+      .cta-deco-teal, .cta-deco-teal2, .cta-deco-teal3,
+      .cta-deco-pink, .cta-deco-pink2, .cta-photo {
+        display: none;
+      }
+    }
+
+    /* ─── RESPONSIVE: MOBILE (≤480px) ────────────── */
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 20px;
+      }
+
+      .nav {
+        height: 60px;
+      }
+      .btn-primary {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .hero-content {
+        padding: 40px 0;
+      }
+      .hero-headline {
+        font-size: 32px;
+      }
+      .hero-badge img {
+        height: 36px;
+      }
+      .hero-countdown {
+        gap: 10px;
+      }
+      .countdown-number {
+        font-size: 18px;
+      }
+
+      .how-tabs {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .how-tabs .tab-pill {
+        text-align: center;
+      }
+      .how-panel {
+        padding: 16px;
+      }
+      .how-panel-title {
+        font-size: 22px;
+      }
+
+      .win-headline {
+        font-size: 28px;
+      }
+      .win-subhead {
+        font-size: 18px;
+      }
+      .win-item-title {
+        font-size: 24px;
+      }
+      .win-item-body {
+        font-size: 16px;
+      }
+
+      .program-headline {
+        font-size: 28px;
+      }
+      .program-time,
+      .program-name {
+        font-size: 24px;
+      }
+
+      .faqs-headline {
+        font-size: 28px;
+      }
+
+      .cta-headline {
+        font-size: 28px;
+      }
+      .cta-sub {
+        font-size: 16px;
+      }
+
+      .footer-columns {
+        grid-template-columns: 1fr;
+      }
+      .footer-primary-links {
+        gap: 16px;
+      }
+    }
+
+    /* ─── REDUCED MOTION ─────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .details-trigger,
+      .details-panel {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-logo">
+        <img class="logo-icon" src="http://localhost:3845/assets/865c1beaa2942937e12c084500c8efd9bb996ee6.svg" alt="Airtable icon" />
+        <img class="logo-text" src="http://localhost:3845/assets/4a1ad0daff8f3bba8ddf0c59e7761ac82bcdfc1e.svg" alt="Airtable" />
+      </div>
+      <button class="btn-primary open-buildathon-modal">Register</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <img src="http://localhost:3845/assets/8f5760e1ffd2e226594404910ba02ed89a00971b.svg" alt="Airtable Buildathon" />
+        </div>
+        <h1 class="hero-headline">300 builders.&nbsp;<br />$100K in prizes.</h1>
+        <p class="hero-subhead">One day to build. Many ways to win. March 19, NYC.</p>
+        <button class="btn-cta open-buildathon-modal">Register</button>
+        <div class="hero-countdown" aria-label="Countdown" aria-live="polite">
+          <div class="countdown-item">
+            <span class="countdown-number" id="cd-days">00</span>
+            <span class="countdown-label">days</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="cd-hours">00</span>
+            <span class="countdown-label">hours</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="cd-mins">00</span>
+            <span class="countdown-label">min</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="cd-secs">00</span>
+            <span class="countdown-label">sec</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-deco">
+      <div class="deco-rect-teal-top"></div>
+      <div class="deco-rect-teal-bottom"></div>
+      <div class="deco-pink-sq"></div>
+      <div class="deco-gray-sq"></div>
+      <div class="deco-pink-sq2"></div>
+      <div class="deco-pink-grad"></div>
+      <div class="deco-pink-grad2"></div>
+      <img class="hero-photo" src="http://localhost:3845/assets/221d17290bef2813cddeedba5dd3d8535b9e29e9.png" alt="" />
+      <img class="hero-photo-bottom" src="http://localhost:3845/assets/bb81315c109fd653afd5818c2d12743ab7cfe870.png" alt="" />
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS (TABBED) -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="how-headline">
+        There's <span class="pink">$100,000</span> up for grabs. Here's how it works.
+      </h2>
+      <p class="how-subhead">
+        You'll build a fully functional Airtable app. You'll experiment with AI capabilities. And you'll leave with prizes, ideas, and fresh community connections.
+      </p>
+
+      <div class="how-tabs" role="tablist">
+        <button class="tab-pill active" role="tab" aria-selected="true" aria-controls="how-panel-1" data-tab="1">Choose a track</button>
+        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-2" data-tab="2">Select bounties</button>
+        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-3" data-tab="3">Record a demo</button>
+        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-4" data-tab="4">Submit to win</button>
+      </div>
+
+      <div class="how-panel-wrap">
+        <div id="how-panel-1" class="how-panel active" role="tabpanel">
+          <h3 class="how-panel-title">Choose between<br />five build tracks</h3>
+          <div class="how-panel-right">
+            <p class="how-panel-body">There are five tracks to choose from, including sales, marketing, product, legal, and creative. Each pathway comes with a fully built demo environment and realistic sample data, so you can start building immediately. Plus, you'll connect with other builders in your field so you can learn together along the way.</p>
+            <div class="how-chips">
+              <span class="how-chip">Demo environment</span>
+              <span class="how-chip">Sample data</span>
+            </div>
+          </div>
+        </div>
+        <div id="how-panel-2" class="how-panel" role="tabpanel">
+          <h3 class="how-panel-title">Pick your bounties<br />and put AI to work</h3>
+          <div class="how-panel-right">
+            <p class="how-panel-body">Bounties are standalone challenges (with standalone prizes) based on core Airtable AI capabilities. Select the strongest AI use case in your demo environment, and put AI to work in an end-to-end workflow.</p>
+            <div class="how-chips">
+              <span class="how-chip">Advanced AI features</span>
+              <span class="how-chip">$2K bounty prizes</span>
+            </div>
+          </div>
+        </div>
+        <div id="how-panel-3" class="how-panel" role="tabpanel">
+          <h3 class="how-panel-title">Record a demo of<br />your workflow</h3>
+          <div class="how-panel-right">
+            <p class="how-panel-body">When you're ready to ship, demo your build in one of our onsite recording booths. Sample data is available to keep your workflow private. To qualify for a $2,000 bounty prize, make sure your build meets the completion criteria explained in your demo app.</p>
+            <div class="how-chips">
+              <span class="how-chip">Exclusive swag</span>
+            </div>
+          </div>
+        </div>
+        <div id="how-panel-4" class="how-panel" role="tabpanel">
+          <h3 class="how-panel-title">Submit to win the $50,000 grand prize</h3>
+          <div class="how-panel-right">
+            <p class="how-panel-body">The builder who delivers the most compelling agentic workflow will win $50,000. The app must be integrated, usable, and ready to deploy, chaining multiple AI steps in one cohesive system. You will have an additional 24 hours to complete your app after the Buildathon; the submission deadline is 8pm, March 20.</p>
+            <div class="how-chips">
+              <span class="how-chip">On-site support</span>
+              <span class="how-chip">On-site demos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HACKATHON DETAILS (INTERACTIVE ACCORDION) -->
+  <section class="hackathon" id="buildathon-details" aria-label="Buildathon details">
+    <div class="container">
+      <h2 class="hack-kicker">A hackathon, but for<br />Airtable builders.</h2>
+
+      <div class="details-accordion" role="list" aria-label="Buildathon details accordion">
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Red carpet</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Photos. Music. Caffeine. Snacks. Time to bring your build game.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Hands-on building</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Six hours to design and ship a fully functional AI app.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Learning zones</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Support stations. Roaming staff. A captain at every table.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Live DJ</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Energy on demand. Focus on cue.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Side stage demos</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">New ideas every 30 minutes. Fast demos. Practical takeaways.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">$100K in prizes</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Build to win. Championship belts. AI bounties. The $50K grand prize.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Builder exchange</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Meet other builders. Trade ideas. Join forces.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Recording booths</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Record demos, walk-throughs, and hot takes.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="details-item" role="listitem">
+          <button class="details-trigger" type="button" aria-expanded="false">Swag drops</button>
+          <div class="details-panel" role="region">
+            <p class="details-desc">Earn event currency. Redeem exclusive drops.</p>
+            <div class="details-divider" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAYS TO WIN -->
+  <section class="ways-to-win">
+    <div class="container">
+      <div class="win-header">
+        <h2 class="win-headline">Ways to win at the<br />Airtable Buildathon</h2>
+        <p class="win-subhead">From surprise moments to big reveals, there are<br />many ways to win.</p>
+      </div>
+      <div class="win-grid">
+        <div class="win-item">
+          <div class="win-item-title">$50,000 grand prize</div>
+          <p class="win-item-body">$50,000 for the winning app. The workflow must be deeply integrated, highly valuable, and ready to ship! Further criteria announced on the day.</p>
+        </div>
+        <div class="win-item">
+          <div class="win-item-title">$2,000 bounties</div>
+          <p class="win-item-body">Bounties for AI. There are seven bounty challenges for different AI use cases. The cleanest, most impactful, AI implementations will win.</p>
+        </div>
+        <div class="win-item">
+          <div class="win-item-title">Championship belts</div>
+          <p class="win-item-body">Belts for ingenuity. Custom Airtable Buildathon belts will go to the bounty winners, awarded to the most impactful AI builders in the room.</p>
+        </div>
+        <div class="win-item">
+          <div class="win-item-title">Aircoins</div>
+          <p class="win-item-body">Aircoins for surprise moments. These coins are earned through flash challenges, and can be redeemed onsite for Airtable swag.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENT PROGRAM -->
+  <section class="program">
+    <div class="container">
+      <h2 class="program-headline">Event Program</h2>
+      <div class="program-item">
+        <div class="program-time">8:00</div>
+        <div class="program-name">Welcome</div>
+        <p class="program-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in finibus nisi. Phasellus ac nunc neque. Mauris ultrices volutpat lectus, et fringilla dui volutpat nec.</p>
+      </div>
+      <div class="program-item">
+        <div class="program-time">9:00</div>
+        <div class="program-name">Kickoff &amp; Keynote</div>
+        <p class="program-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in finibus nisi. Phasellus ac nunc neque. Mauris ultrices volutpat lectus, et fringilla dui volutpat nec.</p>
+      </div>
+      <div class="program-item">
+        <div class="program-time">10:00</div>
+        <div class="program-name">Space to Build</div>
+        <p class="program-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in finibus nisi. Phasellus ac nunc neque. Mauris ultrices volutpat lectus, et fringilla dui volutpat nec.</p>
+      </div>
+      <div class="program-item">
+        <div class="program-time">12:00</div>
+        <div class="program-name">Working Lunch</div>
+        <p class="program-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in finibus nisi. Phasellus ac nunc neque. Mauris ultrices volutpat lectus, et fringilla dui volutpat nec.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="faqs">
+    <div class="container">
+      <div class="faqs-header">
+        <h2 class="faqs-headline">FAQs</h2>
+      </div>
+      <div class="faq-row" onclick="toggleFaq(this)">
+        <span class="faq-question">How long is the session?</span>
+        <div class="faq-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 10.5L3 5.5H13L8 10.5Z" fill="#161616"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-answer">The buildathon runs for one full day, from 8:00 AM to late evening, giving you plenty of time to build, learn, and connect.</div>
+
+      <div class="faq-row" onclick="toggleFaq(this)">
+        <span class="faq-question">What are the prizes?</span>
+        <div class="faq-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 10.5L3 5.5H13L8 10.5Z" fill="#161616"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-answer">There's $100,000 in total prizes including a $50,000 grand prize, $2,000 bounties for AI challenges, championship belts, and Aircoins for flash challenges.</div>
+
+      <div class="faq-row" onclick="toggleFaq(this)">
+        <span class="faq-question">What if I have to cancel?</span>
+        <div class="faq-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 10.5L3 5.5H13L8 10.5Z" fill="#161616"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-answer">Please let us know as soon as possible if you need to cancel. Cancellations made 7+ days before the event may be eligible for a refund.</div>
+
+      <div class="faq-row" onclick="toggleFaq(this)">
+        <span class="faq-question">Is the Buildathon right for me?</span>
+        <div class="faq-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 10.5L3 5.5H13L8 10.5Z" fill="#161616"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-answer">If you use Airtable and love to build — yes! Whether you're a seasoned pro or just getting started, there's a track for you.</div>
+
+      <div class="faq-row" onclick="toggleFaq(this)">
+        <span class="faq-question">Other questions?</span>
+        <div class="faq-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 10.5L3 5.5H13L8 10.5Z" fill="#161616"/>
+          </svg>
+        </div>
+      </div>
+      <div class="faq-answer">Reach out to us at buildathon@airtable.com and we'll get back to you shortly.</div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="cta-headline">Are you ready to win?</h2>
+      <p class="cta-sub">Time to put your builder hat on.</p>
+      <div>
+        <button class="btn-primary open-buildathon-modal">Apply now</button>
+      </div>
+    </div>
+    <div class="cta-deco-teal3"></div>
+    <div class="cta-deco-pink"></div>
+    <div class="cta-deco-teal2"></div>
+    <div class="cta-deco-teal"></div>
+    <div class="cta-deco-pink2"></div>
+    <img class="cta-photo" src="http://localhost:3845/assets/41d1bbd184552571347ffc5cfa3cc160b9363464.png" alt="" />
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <!-- Top bar -->
+      <div class="footer-top">
+        <div class="footer-top-left">
+          <a href="https://airtable.com" class="footer-logo" aria-label="Airtable home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="27" viewBox="0 0 200 170"><path fill="#181D26" d="M90.039 12.367 24.079 39.66c-3.667 1.519-3.63 6.729.062 8.192l66.235 26.266a24.58 24.58 0 0 0 18.12 0l66.236-26.266c3.69-1.463 3.729-6.673.06-8.191l-65.958-27.294a24.58 24.58 0 0 0-18.795 0M105.312 88.46v65.617c0 3.12 3.147 5.258 6.048 4.108l73.806-28.648a4.42 4.42 0 0 0 2.79-4.108V59.813c0-3.121-3.147-5.258-6.048-4.108l-73.806 28.648a4.42 4.42 0 0 0-2.79 4.108M88.078 91.846l-21.904 10.576-2.224 1.075-46.238 22.155c-2.93 1.414-6.672-.722-6.672-3.978V60.088c0-1.178.604-2.195 1.414-2.96a5 5 0 0 1 1.12-.84c1.104-.663 2.68-.84 4.02-.31L87.71 83.76c3.564 1.414 3.844 6.408.368 8.087"/><path fill="#181D26" d="m88.078 91.846-21.904 10.576-53.72-45.295a5 5 0 0 1 1.12-.839c1.104-.663 2.68-.84 4.02-.31L87.71 83.76c3.564 1.414 3.844 6.408.368 8.087"/></svg>
+          </a>
+          <ul class="footer-primary-links">
+          <li><a href="https://airtable.com/platform">Platform</a></li>
+          <li><a href="https://airtable.com/solutions">Solutions</a></li>
+          <li><a href="https://airtable.com/lp/resources">Resources</a></li>
+          <li><a href="https://airtable.com/services">Enterprise</a></li>
+          <li><a href="https://airtable.com/pricing">Pricing</a></li>
+          <li><a href="https://airtable.com/contact-sales">Book Demo</a></li>
+        </ul>
+        </div>
+        <ul class="footer-social" aria-label="Social media">
+          <li><a href="https://facebook.com/airtableapp" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="17" height="17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.45 8.296a8 8 0 1 0-9.25 7.903v-5.59H5.17V8.295H7.2V6.533c0-2.005 1.195-3.112 3.022-3.112.875 0 1.79.156 1.79.156v1.969h-1.008c-.994 0-1.304.616-1.304 1.25v1.5h2.219l-.355 2.312H9.7v5.59a8 8 0 0 0 6.75-7.902" fill="currentColor"/></svg></a></li>
+          <li><a href="https://linkedin.com/company/airtable" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg width="16" height="17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.633 13.929h-2.37v-3.713c0-.885-.016-2.025-1.234-2.025-1.234 0-1.423.965-1.423 1.96v3.778H6.235V6.294H8.51v1.043h.032a2.5 2.5 0 0 1 2.245-1.233c2.403 0 2.846 1.58 2.846 3.637zM3.56 5.25a1.383 1.383 0 0 1-1.376-1.376c0-.754.62-1.376 1.376-1.376.754 0 1.375.621 1.375 1.376S4.315 5.25 3.56 5.25m1.185 8.679H2.372V6.294h2.373zM14.815.297H1.181A1.173 1.173 0 0 0 0 1.45v13.691c.008.64.54 1.162 1.18 1.155h13.635A1.176 1.176 0 0 0 16 15.14V1.45A1.175 1.175 0 0 0 14.815.296Z" fill="currentColor"/></svg></a></li>
+          <li><a href="https://twitter.com/airtable" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><svg width="17" height="17" xmlns="http://www.w3.org/2000/svg"><path d="M10.11 7.37 16.43 0h-1.51L9.44 6.42 5.1 0H0l6.61 9.63L0 17.38h1.51l5.76-6.71 4.63 6.71H17zM8.03 9.73l-.66-.94-5.29-7.66h2.27l4.34 6.14.66.94 5.57 8.03h-2.27L8.02 9.72Z" fill="currentColor"/></svg></a></li>
+          <li><a href="https://instagram.com/airtable" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="17" height="17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 1.736c2.136 0 2.39.008 3.233.047.78.035 1.204.165 1.486.275a2.64 2.64 0 0 1 1.52 1.52c.11.281.24.705.275 1.485.039.844.047 1.096.047 3.233s-.008 2.389-.047 3.232c-.035.78-.165 1.204-.275 1.486a2.64 2.64 0 0 1-1.52 1.52c-.282.11-.706.24-1.486.274-.843.04-1.097.047-3.233.047s-2.39-.008-3.233-.047c-.78-.035-1.204-.165-1.486-.275a2.64 2.64 0 0 1-1.52-1.52c-.11-.281-.24-.705-.274-1.485C1.948 10.685 1.94 10.432 1.94 8.296s.008-2.39.047-3.233c.035-.78.165-1.204.275-1.486a2.64 2.64 0 0 1 1.52-1.52c.281-.11.705-.24 1.485-.274.844-.04 1.097-.047 3.233-.047ZM8.5.296c-2.173 0-2.445.009-3.298.048-.852.039-1.433.174-1.942.372a3.92 3.92 0 0 0-1.417.922A3.92 3.92 0 0 0 .921 3.055c-.198.51-.333 1.09-.372 1.943C.51 5.85.5 6.123.5 8.296s.009 2.445.048 3.298c.039.852.174 1.433.372 1.942.205.527.478.974.922 1.417.443.444.89.717 1.417.923.51.198 1.09.333 1.942.372.853.039 1.125.048 3.298.048s2.445-.01 3.298-.048c.852-.039 1.433-.174 1.942-.372a3.92 3.92 0 0 0 1.417-.923c.444-.443.718-.89.923-1.417.198-.509.333-1.09.372-1.942.039-.853.048-1.125.048-3.298s-.01-2.445-.048-3.298c-.039-.852-.174-1.433-.372-1.943a3.92 3.92 0 0 0-.923-1.417A3.92 3.92 0 0 0 13.74.716c-.509-.198-1.09-.333-1.942-.372C10.945.305 10.673.296 8.5.296Zm0 4.324a3.676 3.676 0 1 0 0 7.352 3.676 3.676 0 0 0 0-7.352Zm0 6.063a2.387 2.387 0 1 1 0-4.775 2.387 2.387 0 0 1 0 4.775Zm3.82-6.21a.859.859 0 1 0 0-1.717.859.859 0 0 0 0 1.718Z" fill="currentColor"/></svg></a></li>
+          <li><a href="https://youtube.com/c/AirtableApp" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg width="18" height="13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.1 2.12A2.16 2.16 0 0 0 15.58.59C14.25.25 9 .25 9 .25S3.75.25 2.42.59A2.16 2.16 0 0 0 .9 2.12C.56 3.46.56 6.25.56 6.25s0 2.79.34 4.13a2.16 2.16 0 0 0 1.52 1.53c1.33.34 6.58.34 6.58.34s5.25 0 6.58-.34a2.16 2.16 0 0 0 1.52-1.53c.34-1.34.34-4.13.34-4.13s0-2.79-.34-4.13ZM7.25 8.87V3.63l4.4 2.62-4.4 2.62Z" fill="currentColor"/></svg></a></li>
+        </ul>
+      </div>
+
+      <!-- Column links -->
+      <nav class="footer-columns" aria-label="Footer navigation">
+        <div>
+          <div class="footer-col-header">Platform</div>
+          <ul class="footer-col-links">
+            <li><a href="https://airtable.com/platform/app-building">AI App Building</a></li>
+            <li><a href="https://airtable.com/platform/ai-agents">AI Agents</a></li>
+            <li><a href="https://airtable.com/platform">Airtable Platform</a></li>
+            <li><a href="https://airtable.com/platform/portals">Portals</a></li>
+            <li><a href="https://airtable.com/platform/automations">Automations</a></li>
+            <li><a href="https://airtable.com/platform/connected-data">Databases</a></li>
+            <li><a href="https://airtable.com/platform/interface-designer">Interfaces</a></li>
+            <li><a href="https://airtable.com/platform/reporting">Reporting</a></li>
+            <li><a href="https://airtable.com/platform/views">Views</a></li>
+            <li><a href="https://airtable.com/platform/ai">Airtable AI</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-header">Solutions</div>
+          <ul class="footer-col-links">
+            <li><a href="https://airtable.com/solutions/product">Product</a></li>
+            <li><a href="https://airtable.com/solutions/marketing">Marketing</a></li>
+            <li><a href="https://airtable.com/solutions/operations">Operations</a></li>
+            <li><a href="https://airtable.com/solutions/project-management">Project Management</a></li>
+            <li><a href="https://airtable.com/solutions/hr">Human Resources</a></li>
+            <li><a href="https://airtable.com/solutions/sales">Sales</a></li>
+            <li><a href="https://airtable.com/solutions/finance">Finance</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-header">Resources</div>
+          <ul class="footer-col-links">
+            <li><a href="https://airtable.com/lp/resources">Resources Hub</a></li>
+            <li><a href="https://airtable.com/templates">Templates</a></li>
+            <li><a href="https://airtable.com/ai-plays">AI Plays</a></li>
+            <li><a href="https://airtable.com/articles">Blog</a></li>
+            <li><a href="https://airtable.com/customer-stories">Customer Stories</a></li>
+            <li><a href="https://airtable.com/events-webinars">Events</a></li>
+            <li><a href="https://airtable.com/marketplace">Marketplace</a></li>
+            <li><a href="https://airtable.com/partners">Partners</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-header">Learn</div>
+          <ul class="footer-col-links">
+            <li><a href="https://airtable.com/guides">How-to guides</a></li>
+            <li><a href="https://airtable.com/developers">Developer docs</a></li>
+            <li><a href="https://academy.airtable.com/">Airtable Academy</a></li>
+            <li><a href="https://community.airtable.com">Airtable Community</a></li>
+            <li><a href="https://support.airtable.com">Help center</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-header">Company</div>
+          <ul class="footer-col-links">
+            <li><a href="https://airtable.com/about">About</a></li>
+            <li><a href="https://airtable.com/careers">Careers</a></li>
+            <li><a href="https://airtable.com/newsroom">Newsroom</a></li>
+            <li><a href="https://status.airtable.com/">Status</a></li>
+            <li><a href="https://airtable.com/pricing">Pricing</a></li>
+            <li><a href="https://airtable.com/contact-sales">Contact Sales</a></li>
+            <li><a href="https://support.airtable.com/docs/contacting-airtable-support">Contact Support</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Utility / legal -->
+      <div class="footer-utility">
+        <a href="https://airtable.com/company/trust-and-security">Security</a>
+        <a href="https://airtable.com/developers/web/api/introduction">API</a>
+        <a href="https://airtable.com/sitemap">Sitemap</a>
+        <a href="https://airtable.com/company/privacy">Privacy</a>
+        <a href="https://airtable.com/company/terms-and-policies">Terms</a>
+        <a href="https://airtable.com/company/privacy-choices">Do Not Sell/Share My Info</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- REGISTRATION MODAL -->
+  <div id="regModal" class="reg-modal" aria-hidden="true">
+    <div class="reg-modal-content" role="dialog" aria-modal="true" aria-label="Register for Buildathon">
+      <span id="regModalClose" class="reg-modal-close" aria-label="Close modal">&times;</span>
+      <iframe class="reg-modal-iframe" src="https://airtable.com/embed/appHWy4gIswVEynIw/pagyK3KmohIOEsQ5H/form" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // ─── REGISTRATION MODAL ─────────────────────────
+    (function () {
+      var modal = document.getElementById('regModal');
+      var closeBtn = document.getElementById('regModalClose');
+
+      function openModal(e) {
+        if (e) e.preventDefault();
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.open-buildathon-modal').forEach(function (btn) {
+        btn.addEventListener('click', openModal);
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+      });
+    })();
+
+    // ─── COUNTDOWN TIMER ────────────────────────────
+    (function () {
+      var target = new Date("2026-03-19T08:00:00").getTime();
+      var elD = document.getElementById("cd-days");
+      var elH = document.getElementById("cd-hours");
+      var elM = document.getElementById("cd-mins");
+      var elS = document.getElementById("cd-secs");
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+
+      function tick() {
+        var now = new Date().getTime();
+        var diff = target - now;
+
+        if (diff <= 0) {
+          elD.textContent = "00";
+          elH.textContent = "00";
+          elM.textContent = "00";
+          elS.textContent = "00";
+          return;
+        }
+
+        elD.textContent = pad(Math.floor(diff / (1000 * 60 * 60 * 24)));
+        elH.textContent = pad(Math.floor((diff / (1000 * 60 * 60)) % 24));
+        elM.textContent = pad(Math.floor((diff / (1000 * 60)) % 60));
+        elS.textContent = pad(Math.floor((diff / 1000) % 60));
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    // ─── HOW IT WORKS TABS ──────────────────────────
+    (function () {
+      var pills = document.querySelectorAll('.how-tabs .tab-pill');
+      var panels = document.querySelectorAll('.how-panel');
+
+      pills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          var tabId = pill.getAttribute('data-tab');
+
+          pills.forEach(function (p) {
+            p.classList.remove('active');
+            p.setAttribute('aria-selected', 'false');
+          });
+          pill.classList.add('active');
+          pill.setAttribute('aria-selected', 'true');
+
+          panels.forEach(function (panel) {
+            panel.classList.remove('active');
+          });
+          document.getElementById('how-panel-' + tabId).classList.add('active');
+        });
+      });
+    })();
+
+    // ─── HACKATHON DETAILS ACCORDION ────────────────
+    (function () {
+      var items = document.querySelectorAll('.details-item');
+      var triggers = Array.from(document.querySelectorAll('.details-trigger'));
+
+      function setAllClosed() {
+        items.forEach(function (item) {
+          item.classList.remove('is-active');
+          item.querySelector('.details-trigger').setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      function toggleItem(item) {
+        var wasActive = item.classList.contains('is-active');
+        setAllClosed();
+        if (!wasActive) {
+          item.classList.add('is-active');
+          item.querySelector('.details-trigger').setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      // On touch devices, use click to toggle
+      var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+
+      if (!canHover) {
+        triggers.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var item = btn.closest('.details-item');
+            if (!item) return;
+            toggleItem(item);
+          });
+        });
+      } else {
+        setAllClosed();
+      }
+
+      // Keyboard navigation
+      triggers.forEach(function (btn) {
+        btn.addEventListener('keydown', function (e) {
+          var k = e.key;
+          if (k !== 'ArrowDown' && k !== 'ArrowUp' && k !== 'Home' && k !== 'End') return;
+
+          e.preventDefault();
+          var i = triggers.indexOf(btn);
+          if (k === 'ArrowDown') i = Math.min(triggers.length - 1, i + 1);
+          if (k === 'ArrowUp') i = Math.max(0, i - 1);
+          if (k === 'Home') i = 0;
+          if (k === 'End') i = triggers.length - 1;
+          triggers[i].focus();
+        });
+      });
+    })();
+
+    // ─── FAQ ACCORDION ──────────────────────────────
+    function toggleFaq(row) {
+      var answer = row.nextElementSibling;
+      var isOpen = row.classList.contains('open');
+      document.querySelectorAll('.faq-row').forEach(function (r) { r.classList.remove('open'); });
+      document.querySelectorAll('.faq-answer').forEach(function (a) { a.classList.remove('open'); });
+      if (!isOpen) {
+        row.classList.add('open');
+        answer.classList.add('open');
+      }
+    }
+  </script>
+</body>
+</html>
