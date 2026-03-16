@@ -227,7 +227,7 @@
       z-index: 2;
     }
 
-    /* ─── HOW IT WORKS (TABBED) ──────────────────── */
+    /* ─── HOW IT WORKS (TIMELINE CARDS) ─────────── */
     .how-it-works {
       background: #0f0f0f;
       padding: 84px 0 88px;
@@ -249,7 +249,6 @@
       max-width: 611px;
       margin-bottom: 20px;
     }
-    .how-headline .pink { color: #f9b5f5; }
     .how-subhead {
       font-size: 18px;
       font-weight: 500;
@@ -257,100 +256,140 @@
       text-align: center;
       line-height: 1.55;
       max-width: 64ch;
-      margin-bottom: 32px;
+      margin-bottom: 48px;
     }
 
-    /* Tab pills */
-    .how-tabs {
+    /* Timeline track */
+    .timeline-track {
+      position: relative;
       display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1248px;
+      padding: 0 130px;
+      margin-bottom: 24px;
     }
-    .how-tabs .tab-pill {
-      display: inline-flex;
+    .timeline-line-bg {
+      position: absolute;
+      top: 50%;
+      left: 150px;
+      right: 150px;
+      height: 2px;
+      background: rgba(249,181,245,0.15);
+      transform: translateY(-50%);
+    }
+    .timeline-line-fill {
+      position: absolute;
+      top: 50%;
+      left: 150px;
+      width: 0;
+      height: 2px;
+      background: #f9b5f5;
+      transform: translateY(-50%);
+      transition: width 0.6s ease;
+    }
+    .timeline-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 24px;
-      border-radius: 4px;
-      border: 1px solid rgba(243,182,255,0.55);
-      background: rgba(0,0,0,0.20);
-      color: #f9b5f5;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1;
-      cursor: pointer;
-      font-family: inherit;
-      user-select: none;
-      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+      font-size: 18px;
+      font-weight: 650;
+      position: relative;
+      z-index: 1;
+      transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+      background: rgba(249,181,245,0.15);
+      border: 2px solid rgba(249,181,245,0.3);
+      color: rgba(249,181,245,0.5);
     }
-    .how-tabs .tab-pill:hover {
-      border-color: rgba(243,182,255,0.80);
-      box-shadow: 0 10px 34px rgba(0,0,0,0.30);
-    }
-    .how-tabs .tab-pill.active {
+    .timeline-dot.is-active {
       background: #f9b5f5;
       border-color: #f9b5f5;
-      color: rgba(10,10,10,0.92);
-      box-shadow: 0 14px 46px rgba(0,0,0,0.35);
+      color: #0f0f0f;
+      transform: scale(1.1);
     }
 
-    /* Tab panels */
-    .how-panel-wrap {
+    /* Cards row */
+    .timeline-cards {
+      display: flex;
       width: 100%;
-      max-width: 980px;
-      margin: 10px auto 0;
+      max-width: 1248px;
+      gap: 20px;
     }
-    .how-panel {
-      display: none;
-      grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
-      column-gap: 44px;
-      row-gap: 18px;
-      padding: 22px;
-      background: #f9b5f5;
-      color: #0b0b0b;
-      min-height: 220px;
-    }
-    .how-panel.active {
-      display: grid;
-    }
-    .how-panel-title {
-      font-size: clamp(24px, 2.4vw, 34px);
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1.08;
-    }
-    .how-panel-body {
-      font-size: 16px;
-      line-height: 1.55;
-      font-weight: 500;
-      max-width: 56ch;
-    }
-    .how-panel-right {
+    .timeline-card {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      flex: 1;
+      padding: 32px;
+      border: 1px solid rgba(249,181,245,0.15);
+      border-radius: 8px;
+      background: rgba(249,181,245,0.02);
+      opacity: 0.4;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.4s ease, background 0.4s ease;
     }
-    .how-chips {
-      margin-top: auto;
-      padding-top: 16px;
+    .timeline-card.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      border-color: rgba(249,181,245,0.5);
+      background: rgba(249,181,245,0.08);
+    }
+    .timeline-card-step {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(249,181,245,0.4);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      transition: color 0.4s ease;
+    }
+    .timeline-card.is-active .timeline-card-step {
+      color: rgba(249,181,245,0.7);
+    }
+    .timeline-card-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: rgba(249,181,245,0.5);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      transition: color 0.4s ease;
+    }
+    .timeline-card.is-active .timeline-card-title {
+      color: #f9b5f5;
+    }
+    .timeline-card-body {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.55;
+      transition: color 0.4s ease;
+    }
+    .timeline-card.is-active .timeline-card-body {
+      color: rgba(255,255,255,0.75);
+    }
+    .timeline-card-chips {
       display: flex;
+      gap: 8px;
+      margin-top: 20px;
       flex-wrap: wrap;
-      gap: 10px;
     }
-    .how-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 7px 10px;
-      background: rgba(0,0,0,0.92);
-      color: #fff;
-      font-size: 10px;
+    .timeline-chip {
+      padding: 6px 8px;
+      background: rgba(0,0,0,0.5);
+      color: rgba(249,181,245,0.4);
+      font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      white-space: nowrap;
+      border-radius: 2px;
+      transition: color 0.4s ease;
+    }
+    .timeline-card.is-active .timeline-chip {
+      color: #f9b5f5;
     }
 
     /* ─── HACKATHON DETAILS (INTERACTIVE ACCORDION) ─ */
@@ -871,9 +910,19 @@
         width: 45%;
       }
 
-      .how-panel {
-        grid-template-columns: 1fr;
-        row-gap: 18px;
+      .timeline-cards {
+        flex-wrap: wrap;
+      }
+      .timeline-card {
+        min-width: calc(50% - 10px);
+      }
+      .timeline-track {
+        padding: 0 80px;
+      }
+      .timeline-line-bg,
+      .timeline-line-fill {
+        left: 100px;
+        right: 100px;
       }
 
       .program-item {
@@ -913,15 +962,24 @@
       .how-it-works {
         padding: 60px 0;
       }
-      .how-tabs {
-        gap: 8px;
+      .timeline-track {
+        padding: 0 40px;
       }
-      .how-tabs .tab-pill {
-        font-size: 13px;
-        padding: 8px 14px;
+      .timeline-line-bg,
+      .timeline-line-fill {
+        left: 60px;
+        right: 60px;
       }
-      .how-panel-body {
-        font-size: 15px;
+      .timeline-dot {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .timeline-cards {
+        flex-direction: column;
+      }
+      .timeline-card {
+        min-width: 100%;
       }
 
       /* Hackathon */
@@ -1050,17 +1108,23 @@
         font-size: 18px;
       }
 
-      .how-tabs {
-        flex-direction: column;
-        align-items: stretch;
+      .timeline-track {
+        padding: 0 20px;
       }
-      .how-tabs .tab-pill {
-        text-align: center;
+      .timeline-line-bg,
+      .timeline-line-fill {
+        left: 40px;
+        right: 40px;
       }
-      .how-panel {
-        padding: 16px;
+      .timeline-dot {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
       }
-      .how-panel-title {
+      .timeline-card {
+        padding: 24px;
+      }
+      .timeline-card-title {
         font-size: 22px;
       }
 
@@ -1169,61 +1233,59 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS (TABBED) -->
-  <section class="how-it-works">
+  <!-- HOW IT WORKS (TIMELINE CARDS) -->
+  <section class="how-it-works" id="how-it-works">
     <div class="container">
       <h2 class="how-headline">
-        There's <span class="pink">$100,000</span> up for grabs. Here's how it works.
+        There's $100,000 up for grabs. Here's how it works.
       </h2>
       <p class="how-subhead">
         You'll build a fully functional Airtable app. You'll experiment with AI capabilities. And you'll leave with prizes, ideas, and fresh community connections.
       </p>
 
-      <div class="how-tabs" role="tablist">
-        <button class="tab-pill active" role="tab" aria-selected="true" aria-controls="how-panel-1" data-tab="1">Choose a track</button>
-        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-2" data-tab="2">Select bounties</button>
-        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-3" data-tab="3">Record a demo</button>
-        <button class="tab-pill" role="tab" aria-selected="false" aria-controls="how-panel-4" data-tab="4">Submit to win</button>
+      <div class="timeline-track">
+        <div class="timeline-line-bg"></div>
+        <div class="timeline-line-fill" id="timeline-fill"></div>
+        <div class="timeline-dot" data-step="0">1</div>
+        <div class="timeline-dot" data-step="1">2</div>
+        <div class="timeline-dot" data-step="2">3</div>
+        <div class="timeline-dot" data-step="3">4</div>
       </div>
 
-      <div class="how-panel-wrap">
-        <div id="how-panel-1" class="how-panel active" role="tabpanel">
-          <h3 class="how-panel-title">Choose between<br />five build tracks</h3>
-          <div class="how-panel-right">
-            <p class="how-panel-body">There are five tracks to choose from, including sales, marketing, product, legal, and creative. Each pathway comes with a fully built demo environment and realistic sample data, so you can start building immediately. Plus, you'll connect with other builders in your field so you can learn together along the way.</p>
-            <div class="how-chips">
-              <span class="how-chip">Demo environment</span>
-              <span class="how-chip">Sample data</span>
-            </div>
+      <div class="timeline-cards">
+        <div class="timeline-card" data-step="0">
+          <div class="timeline-card-step">Step 01</div>
+          <div class="timeline-card-title">Choose a track</div>
+          <p class="timeline-card-body">Five tracks to choose from: sales, marketing, product, legal, and creative. Each comes with a demo environment and realistic sample data.</p>
+          <div class="timeline-card-chips">
+            <span class="timeline-chip">Demo environment</span>
+            <span class="timeline-chip">Sample data</span>
           </div>
         </div>
-        <div id="how-panel-2" class="how-panel" role="tabpanel">
-          <h3 class="how-panel-title">Pick your bounties<br />and put AI to work</h3>
-          <div class="how-panel-right">
-            <p class="how-panel-body">Bounties are standalone challenges (with standalone prizes) based on core Airtable AI capabilities. Select the strongest AI use case in your demo environment, and put AI to work in an end-to-end workflow.</p>
-            <div class="how-chips">
-              <span class="how-chip">Advanced AI features</span>
-              <span class="how-chip">$2K bounty prizes</span>
-            </div>
+        <div class="timeline-card" data-step="1">
+          <div class="timeline-card-step">Step 02</div>
+          <div class="timeline-card-title">Select bounties</div>
+          <p class="timeline-card-body">Standalone challenges with standalone prizes based on core Airtable AI capabilities. Put AI to work in an end-to-end workflow.</p>
+          <div class="timeline-card-chips">
+            <span class="timeline-chip">Advanced AI features</span>
+            <span class="timeline-chip">$2K bounty prizes</span>
           </div>
         </div>
-        <div id="how-panel-3" class="how-panel" role="tabpanel">
-          <h3 class="how-panel-title">Record a demo of<br />your workflow</h3>
-          <div class="how-panel-right">
-            <p class="how-panel-body">When you're ready to ship, demo your build in one of our onsite recording booths. Sample data is available to keep your workflow private. To qualify for a $2,000 bounty prize, make sure your build meets the completion criteria explained in your demo app.</p>
-            <div class="how-chips">
-              <span class="how-chip">Exclusive swag</span>
-            </div>
+        <div class="timeline-card" data-step="2">
+          <div class="timeline-card-step">Step 03</div>
+          <div class="timeline-card-title">Record a demo</div>
+          <p class="timeline-card-body">Demo your build in one of our onsite recording booths. Sample data is available to keep your workflow private.</p>
+          <div class="timeline-card-chips">
+            <span class="timeline-chip">Exclusive swag</span>
           </div>
         </div>
-        <div id="how-panel-4" class="how-panel" role="tabpanel">
-          <h3 class="how-panel-title">Submit to win the $50,000 grand prize</h3>
-          <div class="how-panel-right">
-            <p class="how-panel-body">The builder who delivers the most compelling agentic workflow will win $50,000. The app must be integrated, usable, and ready to deploy, chaining multiple AI steps in one cohesive system. You will have an additional 24 hours to complete your app after the Buildathon; the submission deadline is 8pm, March 20.</p>
-            <div class="how-chips">
-              <span class="how-chip">On-site support</span>
-              <span class="how-chip">On-site demos</span>
-            </div>
+        <div class="timeline-card" data-step="3">
+          <div class="timeline-card-step">Step 04</div>
+          <div class="timeline-card-title">Submit to win</div>
+          <p class="timeline-card-body">Deliver the most compelling agentic workflow to win $50,000. The app must be integrated, usable, and ready to deploy.</p>
+          <div class="timeline-card-chips">
+            <span class="timeline-chip">On-site support</span>
+            <span class="timeline-chip">On-site demos</span>
           </div>
         </div>
       </div>
@@ -1627,28 +1689,66 @@
       setInterval(tick, 1000);
     })();
 
-    // ─── HOW IT WORKS TABS ──────────────────────────
+    // ─── TIMELINE CARDS SCROLL ANIMATION ────────────
     (function () {
-      var pills = document.querySelectorAll('.how-tabs .tab-pill');
-      var panels = document.querySelectorAll('.how-panel');
+      var section = document.getElementById('how-it-works');
+      var fill = document.getElementById('timeline-fill');
+      var dots = document.querySelectorAll('.timeline-dot');
+      var cards = document.querySelectorAll('.timeline-card');
+      var track = document.querySelector('.timeline-track');
 
-      pills.forEach(function (pill) {
-        pill.addEventListener('click', function () {
-          var tabId = pill.getAttribute('data-tab');
+      if (!section || !fill || !track) return;
 
-          pills.forEach(function (p) {
-            p.classList.remove('active');
-            p.setAttribute('aria-selected', 'false');
-          });
-          pill.classList.add('active');
-          pill.setAttribute('aria-selected', 'true');
+      var lineLeft = 150; // matches CSS left offset
+      var totalSteps = 4;
 
-          panels.forEach(function (panel) {
-            panel.classList.remove('active');
-          });
-          document.getElementById('how-panel-' + tabId).classList.add('active');
+      function getLineWidth() {
+        var trackW = track.offsetWidth;
+        return trackW - lineLeft * 2;
+      }
+
+      function update() {
+        var rect = section.getBoundingClientRect();
+        var vh = window.innerHeight;
+        var sectionTop = rect.top;
+        var sectionH = rect.height;
+
+        // Progress: 0 when section enters viewport, 1 when it's mostly scrolled past
+        var raw = (vh - sectionTop) / (sectionH + vh * 0.3);
+        var progress = Math.max(0, Math.min(1, raw));
+
+        // Map progress to active step count (0 to 4)
+        var activeCount = Math.min(totalSteps, Math.floor(progress * (totalSteps + 1)));
+
+        // Fill line
+        var maxW = getLineWidth();
+        var fillFractions = [0, 0.33, 0.66, 1];
+        var fillTarget = activeCount > 0 ? fillFractions[Math.min(activeCount - 1, 3)] : 0;
+        fill.style.width = (fillTarget * maxW) + 'px';
+
+        // Activate dots and cards
+        dots.forEach(function (dot, i) {
+          if (i < activeCount) {
+            dot.classList.add('is-active');
+          } else {
+            dot.classList.remove('is-active');
+          }
         });
-      });
+
+        cards.forEach(function (card, i) {
+          if (i < activeCount) {
+            card.classList.add('is-active');
+            card.style.transitionDelay = (i * 0.08) + 's';
+          } else {
+            card.classList.remove('is-active');
+            card.style.transitionDelay = '0s';
+          }
+        });
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
     })();
 
     // ─── HACKATHON DETAILS ACCORDION ────────────────
