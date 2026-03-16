@@ -373,6 +373,7 @@
     }
     .details-accordion {
       margin-top: 18px;
+      overflow: hidden;
     }
     .details-item {
       padding: 6px 0;
@@ -399,15 +400,18 @@
       border-radius: 14px;
     }
     .details-panel {
-      overflow: hidden;
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
       opacity: 0;
-      transition: max-height 260ms ease, opacity 200ms ease;
+      transition: grid-template-rows 350ms cubic-bezier(0.25, 0.1, 0.25, 1), opacity 250ms ease;
+    }
+    .details-panel > .details-panel-inner {
+      overflow: hidden;
+      padding-top: 16px;
     }
     .details-item.is-active .details-panel {
-      max-height: 300px;
+      grid-template-rows: 1fr;
       opacity: 1;
-      margin-top: 4px;
     }
     .details-item.is-active .details-trigger {
       color: var(--details-accent);
@@ -432,19 +436,16 @@
         color: var(--details-accent);
       }
       .details-item:hover .details-panel {
-        max-height: 300px;
+        grid-template-rows: 1fr;
         opacity: 1;
-        margin-top: 4px;
       }
       .details-item.is-active .details-panel {
-        max-height: 0;
+        grid-template-rows: 0fr;
         opacity: 0;
-        margin-top: 0;
       }
       .details-item.is-active:hover .details-panel {
-        max-height: 300px;
+        grid-template-rows: 1fr;
         opacity: 1;
-        margin-top: 4px;
       }
     }
 
@@ -1237,66 +1238,66 @@
       <div class="details-accordion" role="list" aria-label="Buildathon details accordion">
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Red carpet</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Photos. Music. Caffeine. Snacks. Time to bring your build game.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Hands-on building</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Six hours to design and ship a fully functional AI app.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Learning zones</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Support stations. Roaming staff. A captain at every table.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Live DJ</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Energy on demand. Focus on cue.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Side stage demos</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">New ideas every 30 minutes. Fast demos. Practical takeaways.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">$100K in prizes</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Build to win. Championship belts. AI bounties. The $50K grand prize.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Builder exchange</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Meet other builders. Trade ideas. Join forces.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Recording booths</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Record demos, walk-throughs, and hot takes.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
         <div class="details-item" role="listitem">
           <button class="details-trigger" type="button" aria-expanded="false">Swag drops</button>
-          <div class="details-panel" role="region">
+          <div class="details-panel" role="region"><div class="details-panel-inner">
             <p class="details-desc">Earn event currency. Redeem exclusive drops.</p>
             <div class="details-divider" aria-hidden="true"></div>
-          </div>
+          </div></div>
         </div>
       </div>
     </div>
@@ -1652,8 +1653,17 @@
 
     // ─── HACKATHON DETAILS ACCORDION ────────────────
     (function () {
+      var accordion = document.querySelector('.details-accordion');
       var items = document.querySelectorAll('.details-item');
       var triggers = Array.from(document.querySelectorAll('.details-trigger'));
+
+      // Lock the accordion height to its collapsed size + buffer for the last item's panel
+      function lockAccordionHeight() {
+        accordion.style.height = '';
+        accordion.style.height = (accordion.offsetHeight + 60) + 'px';
+      }
+      lockAccordionHeight();
+      window.addEventListener('resize', lockAccordionHeight);
 
       function setAllClosed() {
         items.forEach(function (item) {
