@@ -1013,7 +1013,7 @@ export default function AirspacePage() {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
-              padding: isMobile ? "12px 20px" : "12px 163px",
+              padding: isMobile ? "12px 20px" : "12px 40px",
               backgroundColor: "rgba(255,255,255,0.95)",
               borderBottom: "1px solid rgba(22,22,22,0.06)",
               backdropFilter: "blur(10px)",
